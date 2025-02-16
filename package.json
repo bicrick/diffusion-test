@@ -9,6 +9,6 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "cursor-tools": "^0.5.0"
+    "cursor-tools": "latest"
   }
 }
