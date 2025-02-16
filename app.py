@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Initialize the small model
-model_id = "OFA-Sys/small-stable-diffusion-v0"
+model_id = "madebyollin/sdxl-tiny"
 pipe = None
 
 def load_model():
@@ -19,11 +19,13 @@ def load_model():
     if pipe is None:
         pipe = StableDiffusionPipeline.from_pretrained(
             model_id,
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32
+            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+            use_safetensors=True  # More memory efficient
         )
         if torch.cuda.is_available():
             pipe = pipe.to("cuda")
-        pipe.enable_attention_slicing()  # Reduce memory usage
+        pipe.enable_attention_slicing()
+        pipe.enable_model_cpu_offload()  # Further reduce memory usage
 
 def get_image_base64(image):
     buffered = io.BytesIO()
